@@ -1,35 +1,43 @@
 package cache
 
-// type Point struct {
-// 	x, y int
-// }
+import "time"
 
-// type Square struct {
-// 	start Point
-// 	a     uint
-// }
+type dataElement struct {
+	value     string
+	timestamp time.Time
+	elapsable bool
+}
 
-// func (r *Square) Area() uint {
-// 	return r.a * r.a
-// }
+type Cache struct {
+	cache map[string]dataElement
+}
 
-// func (r Square) Perimeter() uint {
-// 	return 4 * r.a
-// }
+func NewCache() Cache {
+	var m = make(map[string]dataElement)
 
-// func (r Square) End() Point {
-// 	out := Point{r.start.x + int(r.a), r.start.y + int(r.a)}
-// 	return out
-// }
+	return Cache{m}
+}
 
-// package main
+func (a Cache) Get(key string) (string, bool) {
+	return "", false
+}
 
-// func main() {
-// 	//	m := "+1-2 -3 -5"
-// 	m := "-a-2"
-// 	var a string
-// 	fmt.Println(m)
-// 	a, e := StringSum(m)
-// 	fmt.Println("string", a)
-// 	fmt.Println("error: ", e)
-// }
+func (a Cache) Put(key, value string) {
+	var temp = dataElement{value, time.Now(), false}
+	a.cache[key] = temp
+}
+
+func (a Cache) Keys() []string {
+	var out []string
+	for _, v := range a.cache {
+		if v.timestamp.Before(time.Now()) {
+			out = append(out, v.value)
+		}
+	}
+	return out
+}
+
+func (a *Cache) PutTill(key, value string, deadline time.Time) {
+	var temp = dataElement{value, deadline, true}
+	a.cache[key] = temp
+}
