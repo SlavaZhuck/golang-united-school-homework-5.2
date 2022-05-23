@@ -19,7 +19,16 @@ func NewCache() Cache {
 }
 
 func (a Cache) Get(key string) (string, bool) {
-	return "", false
+	value, v := a.cache[key]
+	if v == true {
+		if time.Now().Before(value.timestamp) {
+			return value.value, true
+		} else {
+			return value.value, false
+		}
+	} else {
+		return value.value, false
+	}
 }
 
 func (a Cache) Put(key, value string) {
