@@ -1,4 +1,4 @@
-// package main
+//package main
 
 package cache
 
@@ -29,7 +29,8 @@ func (a Cache) Get(key string) (string, bool) {
 			if time.Now().Before(value.timestamp) {
 				return value.value, true
 			} else {
-				return value.value, false
+				//delete(a.cache, key)
+				return "", false
 			}
 		} else {
 			return value.value, true
@@ -48,9 +49,14 @@ func (a Cache) Put(key, value string) {
 func (a Cache) Keys() []string {
 	var out []string
 	for key, v := range a.cache {
-		if v.timestamp.Before(time.Now()) {
+		if !v.elapsable {
 			out = append(out, key)
+		} else {
+			if v.timestamp.After(time.Now()) {
+				out = append(out, key)
+			}
 		}
+
 	}
 	return out
 }
@@ -60,13 +66,13 @@ func (a Cache) PutTill(key, value string, deadline time.Time) {
 	a.cache[key] = temp
 }
 
-type kvPair struct {
-	key          string
-	value        string
-	expValue     string
-	deadline     time.Time
-	shouldExpire bool
-}
+// type kvPair struct {
+// 	key          string
+// 	value        string
+// 	expValue     string
+// 	deadline     time.Time
+// 	shouldExpire bool
+// }
 
 // func main() {
 // 	cases := map[string]struct {
