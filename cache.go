@@ -1,4 +1,4 @@
-//package main
+// package main
 
 package cache
 
@@ -29,7 +29,7 @@ func (a Cache) Get(key string) (string, bool) {
 			if time.Now().Before(value.timestamp) {
 				return value.value, true
 			} else {
-				//delete(a.cache, key)
+				delete(a.cache, key)
 				return "", false
 			}
 		} else {
@@ -54,6 +54,8 @@ func (a Cache) Keys() []string {
 		} else {
 			if v.timestamp.After(time.Now()) {
 				out = append(out, key)
+			} else {
+
 			}
 		}
 
