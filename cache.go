@@ -55,7 +55,7 @@ func (a Cache) Keys() []string {
 			if v.timestamp.After(time.Now()) {
 				out = append(out, key)
 			} else {
-
+				delete(a.cache, key)
 			}
 		}
 
